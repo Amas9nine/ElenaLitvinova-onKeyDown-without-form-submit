@@ -10,16 +10,45 @@ export const generateId = () => (
 );
 
 export const App = () => {
-  const tasks = [{
-    id: 12312,
-    title: 'sadfdas'
-  }];
+
+  const [tasks, setTask] = useState([]);
+
+  const onAdd = (title) => {
+    if (title) {
+      setTask([
+        {
+          id: generateId(),
+          title
+        },
+        ...tasks
+      ])
+    }
+  };
+
+  const onDone = (id) => {
+    setTask(tasks.filter((item) => (item.id !== id)))
+  }
+
+  const onRemove = (id) => {
+    setTask(tasks.filter(item => item.id !== id))
+  }
+
+  const onEdite = (id, value) => {
+    setTask(tasks.map(item => item.id === id ? {
+      ...item,
+      title: value
+    }
+      :
+      item))
+  }
 
   return (
     <article className={styles.article}>
       <h1 className={styles.articleTitle}>To Do App</h1>
       <section className={styles.articleSection}>
-          <InputPlus />
+        <InputPlus
+          onAdd={onAdd}
+        />
       </section>
       <section className={styles.articleSection}>
         {tasks.length <= 0 && (
@@ -28,7 +57,11 @@ export const App = () => {
         {tasks.map((task) => (
           <InputTask
             key={task.id}
+            id={task.id}
             title={task.title}
+            onDone={onDone}
+            onRemove={onRemove}
+            onEdite={onEdite}
           />
         ))}
       </section>
